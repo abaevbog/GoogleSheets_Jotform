@@ -12,11 +12,14 @@ class App extends Component {
       employees:[],
       status:'auth',
       spreadsheetUrl:'',
+      googleSheetTable:'',
+      columnIndex:null
     }
   
     this.authDone = this.authDone.bind(this);
     this.initClient = this.initClient.bind(this);
     this.loadGapiAndAfterwardsInitAuth = this.loadGapiAndAfterwardsInitAuth.bind(this);
+    this.getJotFormParams = this.getJotFormParams.bind(this);
   }
 
   loadGapiAndAfterwardsInitAuth() {
@@ -29,7 +32,16 @@ class App extends Component {
 }
   componentDidMount(){
     this.loadGapiAndAfterwardsInitAuth();
-    this.setState({'spreadsheetUrl':'1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms'});
+    window.JFCustomWidget.subscribe("ready", ()=> {
+      this.getJotFormParams(this);
+    })
+  }
+
+  getJotFormParams(that){
+    const googleSheetId = window.JFCustomWidget.getWidgetSetting('googleSheetId');
+    const googleSheetTable = window.JFCustomWidget.getWidgetSetting('googleSheetTableName');
+    const columnIndex = window.JFCustomWidget.getWidgetSetting('columnIndex');
+    that.setState({spreadsheetUrl:googleSheetId, googleSheetTable:googleSheetTable, columnIndex:columnIndex});
   }
 
   authDone(){
@@ -67,9 +79,8 @@ class App extends Component {
     if (this.state.status === 'auth' ){
       page = <Auth authDone={this.authDone}> </Auth>;
     } else if (this.state.status === 'search'){
-      page = <Options spreadsheetUrl={this.state.spreadsheetUrl}></Options>
+      page = <Options spreadsheetUrl={this.state.spreadsheetUrl} googleSheetTable={this.state.googleSheetTable} columnIndex={this.state.columnIndex}></Options>
     }
-
 
     return (
       <div className="App">

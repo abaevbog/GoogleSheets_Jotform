@@ -1,24 +1,23 @@
 
 import React, { Component } from 'react';
-import Autocomplete from  'react-autocomplete';
+import {Typeahead} from 'react-bootstrap-typeahead';
+
 
 
 class AutocompletePage extends Component {
 
-  constructor (props) {
-    super(props)
-    this.state = {
-      value: '',
-    }
+  constructor(props){
+    super(props);
+    this.state = {multiple:false};
+    this.getOptions = this.getOptions.bind(this);
   }
-
 
   getOptions(){
     console.log("get opts");
     var res = [];
     for(var i =0;i<this.props.options.length;i++){
       if (this.props.options[i][0] ){
-        res.push({id:this.props.options[i][0],label:this.props.options[i][0]});
+        res.push(this.props.options[i][this.props.columnIndex]);
       }
     }
     console.log(res);
@@ -26,28 +25,19 @@ class AutocompletePage extends Component {
   }
 
   render() {
-
+    const {multiple} = false;
     return (
-      <Autocomplete
-        items={this.getOptions()}
-        shouldItemRender={(item, value) => item.label.toLowerCase().indexOf(value.toLowerCase()) > -1}
-        getItemValue={item => item.label}
-        renderItem={(item, highlighted) =>
-          <div
-            key={item.id}
-            style={{ backgroundColor: highlighted ? '#eee' : 'transparent'}}
-          >
-            {item.label}
-          </div>
-        }
-        value={this.state.value}
-        onChange={e => this.setState({ value: e.target.value })}
-        onSelect={value => this.setState({ value })}
-      />
-    )
+        <Typeahead
+          labelKey="name"
+          multiple={multiple}
+          options={this.getOptions()}
+          placeholder="Look up by name"
+        />);
   }
 }
 
 
-
 export default AutocompletePage;
+
+
+

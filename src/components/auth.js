@@ -11,10 +11,12 @@ constructor(props) {
 
   handleAuthClick(event) {
     console.log("handle auth click");
-    window.gapi.auth2.getAuthInstance().signIn();
-    if (window.gapi.auth2.getAuthInstance().isSignedIn.get()){
-      this.props.authDone();
-    }
+    window.gapi.auth2.getAuthInstance().signIn().then((err,res)=> {
+      if (window.gapi.auth2.getAuthInstance().isSignedIn.get()){
+        this.props.authDone();
+      }
+    });
+
   }
 
 

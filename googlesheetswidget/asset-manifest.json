@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/googlesheetswidget/static/css/main.b1f82f48.chunk.css",
+    "main.js": "/googlesheetswidget/static/js/main.46a0e4f8.chunk.js",
+    "main.js.map": "/googlesheetswidget/static/js/main.46a0e4f8.chunk.js.map",
+    "runtime~main.js": "/googlesheetswidget/static/js/runtime~main.b498a1b1.js",
+    "runtime~main.js.map": "/googlesheetswidget/static/js/runtime~main.b498a1b1.js.map",
+    "static/css/2.177b91ab.chunk.css": "/googlesheetswidget/static/css/2.177b91ab.chunk.css",
+    "static/js/2.58b20a58.chunk.js": "/googlesheetswidget/static/js/2.58b20a58.chunk.js",
+    "static/js/2.58b20a58.chunk.js.map": "/googlesheetswidget/static/js/2.58b20a58.chunk.js.map",
+    "index.html": "/googlesheetswidget/index.html",
+    "precache-manifest.6fc3b97c3343f2089424002b60ca304b.js": "/googlesheetswidget/precache-manifest.6fc3b97c3343f2089424002b60ca304b.js",
+    "service-worker.js": "/googlesheetswidget/service-worker.js",
+    "static/css/2.177b91ab.chunk.css.map": "/googlesheetswidget/static/css/2.177b91ab.chunk.css.map",
+    "static/css/main.b1f82f48.chunk.css.map": "/googlesheetswidget/static/css/main.b1f82f48.chunk.css.map"
+  }
+}
