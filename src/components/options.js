@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
+import $ from 'jquery';
 import AutocompletePage from './autocomplete';
 
 class Options extends Component {
@@ -36,17 +36,20 @@ class Options extends Component {
 
   fetchGoogleSheets(that){
     console.log("In fetch google sheets");
-    console.log(that.props.spreadsheetUrl);
-    console.log(that.props.googleSheetTable);
-    if (that.props.spreadsheetUrl && that.props.googleSheetTable){
-      window.gapi.client.sheets.spreadsheets.values.get({
-        spreadsheetId: that.props.spreadsheetUrl,
-        'range': that.props.googleSheetTable,
-      }).then(function(response){
-        that.setState({options:response.result.values});
-        console.log(that.state.options);
-      })
-    } 
+
+      $.ajax({
+        url:'https://g6728mnsi5.execute-api.us-east-1.amazonaws.com/exchangeCodeForTOken/querygooglesheet',
+        method:'POST',
+        data: {},
+        success: function(resp){
+          console.log(resp);
+          that.setState({options:resp.values});
+        },
+        error: function(err){
+          console.log(err);
+        }
+      });
+   // } 
   }
 
 
@@ -57,7 +60,7 @@ class Options extends Component {
         <div className="row">
           <div className="col-sm-2">Search:</div>
           <div className="col-sm-10">
-            <AutocompletePage options={this.state.options} columnIndex={this.props.columnIndex}> </AutocompletePage>
+            <AutocompletePage options={this.state.options} columnIndex={0}> </AutocompletePage>
           </div>
         </div>
  

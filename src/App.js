@@ -10,7 +10,7 @@ class App extends Component {
     this.state = {
       selectedEmail: null,
       employees:[],
-      status:'auth',
+      status:'search',
       spreadsheetUrl:'',
       googleSheetTable:'',
       columnIndex:null
@@ -20,6 +20,8 @@ class App extends Component {
     this.initClient = this.initClient.bind(this);
     this.loadGapiAndAfterwardsInitAuth = this.loadGapiAndAfterwardsInitAuth.bind(this);
     this.getJotFormParams = this.getJotFormParams.bind(this);
+    this.loadAWS = this.loadAWS.bind(this);
+    this.prepAWS = this.prepAWS.bind(this);
   }
 
   loadGapiAndAfterwardsInitAuth() {
@@ -30,11 +32,27 @@ class App extends Component {
     script.onload=()=>{this.initClient(this)};
     document.head.appendChild(script);
 }
+
+  loadAWS(){
+    const script = document.createElement("script");
+    script.src = "https://sdk.amazonaws.com/js/aws-sdk-2.283.1.min.js";
+    script.async = true;
+    script.defer = true;
+    script.onload=()=>{this.prepAWS()};
+    document.head.appendChild(script);
+  }
+
+  prepAWS(){
+    console.log("AWS ready!");
+  }
+
+
   componentDidMount(){
     this.loadGapiAndAfterwardsInitAuth();
-    window.JFCustomWidget.subscribe("ready", ()=> {
-      this.getJotFormParams(this);
-    })
+    this.loadAWS();
+    // window.JFCustomWidget.subscribe("ready", ()=> {
+    //   this.getJotFormParams(this);
+    // })
   }
 
   getJotFormParams(that){
@@ -64,7 +82,7 @@ class App extends Component {
       scope: SCOPES
     }).then((res)=>{
       var signedIn= window.gapi.auth2.getAuthInstance().isSignedIn.get();
-      that.setState({status:signedIn?'search':'auth'});
+      //that.setState({status:signedIn?'search':'auth'});
       console.log(signedIn);
     }).catch((error) =>{
       console.log(error);
