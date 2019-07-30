@@ -2,18 +2,17 @@ import React, { Component } from 'react';
 import './App.css';
 import Auth from './components/auth';
 import Options from './components/options';
-
+import Loading from './components/loading';
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      selectedEmail: null,
-      employees:[],
-      status:'search',
+      loading:true,
+      status:'auth',
       spreadsheetUrl:'',
       googleSheetTable:'',
-      columnIndex:null
+      columnIndex: 0
     }
   
     this.authDone = this.authDone.bind(this);
@@ -38,33 +37,50 @@ class App extends Component {
     script.src = "https://sdk.amazonaws.com/js/aws-sdk-2.283.1.min.js";
     script.async = true;
     script.defer = true;
-    script.onload=()=>{this.prepAWS()};
+    script.onload=()=>{this.prepAWS(this)};
     document.head.appendChild(script);
   }
 
-  prepAWS(){
+  prepAWS(that){
     console.log("AWS ready!");
+    var BucketName = 'kuku.bucket.for.creds.superunique1235925';
+    window.AWS.config.region = 'us-east-1'; 
+    window.AWS.config.credentials = new window.AWS.CognitoIdentityCredentials({
+        IdentityPoolId: "us-east-1:ae3448c6-787e-4d5c-8e3b-19b9acba2b38",
+    });
+
+    var s3 = new window.AWS.S3({
+      apiVersion: '2006-03-01',
+      params: {Bucket: BucketName}
+    });
+
+    s3.getObject({Bucket: BucketName, Key: "Done.txt"}, function(err,data){
+      if (err){
+        that.loadGapiAndAfterwardsInitAuth();
+      } else {
+        that.setState({status:'search', loading:false});
+      }
+    });
+
   }
 
 
   componentDidMount(){
-    this.loadGapiAndAfterwardsInitAuth();
     this.loadAWS();
-    // window.JFCustomWidget.subscribe("ready", ()=> {
-    //   this.getJotFormParams(this);
-    // })
+    window.JFCustomWidget.subscribe("ready", ()=> {
+      this.getJotFormParams(this);
+    })
   }
 
   getJotFormParams(that){
     const googleSheetId = window.JFCustomWidget.getWidgetSetting('googleSheetId');
     const googleSheetTable = window.JFCustomWidget.getWidgetSetting('googleSheetTableName');
     const columnIndex = window.JFCustomWidget.getWidgetSetting('columnIndex');
-    that.setState({spreadsheetUrl:googleSheetId, googleSheetTable:googleSheetTable, columnIndex:columnIndex});
+    that.setState({spreadsheetUrl:googleSheetId, googleSheetTable:googleSheetTable, columnIndex:columnIndex-1});
   }
 
   authDone(){
     this.setState({status:'search'});
-    console.log('auth done!!');
   }
 
 
@@ -81,9 +97,8 @@ class App extends Component {
       discoveryDocs: DISCOVERY_DOCS,
       scope: SCOPES
     }).then((res)=>{
-      var signedIn= window.gapi.auth2.getAuthInstance().isSignedIn.get();
-      //that.setState({status:signedIn?'search':'auth'});
-      console.log(signedIn);
+      that.setState({loading:false});
+      console.log("client loaded");
     }).catch((error) =>{
       console.log(error);
       });
@@ -94,12 +109,16 @@ class App extends Component {
 
   render() {
     var page;
-    if (this.state.status === 'auth' ){
-      page = <Auth authDone={this.authDone}> </Auth>;
-    } else if (this.state.status === 'search'){
-      page = <Options spreadsheetUrl={this.state.spreadsheetUrl} googleSheetTable={this.state.googleSheetTable} columnIndex={this.state.columnIndex}></Options>
+    if (this.state.loading || !this.state.spreadsheetUrl){  
+  //  if (this.state.loading ){ 
+      page = <Loading> </Loading>
+    }else {
+      if (this.state.status === 'auth' ){
+        page = <Auth authDone={this.authDone}> </Auth>;
+      } else if (this.state.status === 'search'){
+        page = <Options spreadsheetUrl={this.state.spreadsheetUrl} googleSheetTable={this.state.googleSheetTable} columnIndex={this.state.columnIndex}></Options>
+      }
     }
-
     return (
       <div className="App">
         {page}
