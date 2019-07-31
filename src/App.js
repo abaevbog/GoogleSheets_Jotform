@@ -56,8 +56,10 @@ class App extends Component {
 
     s3.getObject({Bucket: BucketName, Key: "Done.txt"}, function(err,data){
       if (err){
+        console.log("not authed");
         that.loadGapiAndAfterwardsInitAuth();
       } else {
+        console.log("authed");
         that.setState({status:'search', loading:false});
       }
     });
@@ -109,8 +111,8 @@ class App extends Component {
 
   render() {
     var page;
-    if (this.state.loading || !this.state.spreadsheetUrl){  
-  //  if (this.state.loading ){ 
+    //if (this.state.loading || !this.state.spreadsheetUrl){ 
+      if (this.state.loading){ 
       page = <Loading> </Loading>
     }else {
       if (this.state.status === 'auth' ){

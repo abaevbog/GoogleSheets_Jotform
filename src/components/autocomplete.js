@@ -11,6 +11,10 @@ class AutocompletePage extends Component {
     this.state = {multiple:false};
   }
 
+  componentDidMount(){
+    window.JFCustomWidget.sendData({value:null});
+  }
+
 
   render() {
     const {multiple} = false;
@@ -22,7 +26,7 @@ class AutocompletePage extends Component {
           placeholder="Search"
           onChange={(selected) => { 
             console.log(selected);
-            if ( this.props.options.includes(selected)){
+            if ( this.props.options.includes(selected[0])){
             console.log("Includes");
             window.JFCustomWidget.sendData({value:selected});
           }
