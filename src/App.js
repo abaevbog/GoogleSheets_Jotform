@@ -88,8 +88,8 @@ class App extends Component {
 
 
   initClient(that) {
-    var CLIENT_ID = '359652543273-isuh9t7hco6p8f1pav3kau3misrim8tv.apps.googleusercontent.com';
-    var API_KEY = 'AIzaSyDjHBwz8TITrxzmbOhLgx0m0MW1RyXkAPw';
+    var CLIENT_ID = process.env.CLIENT_ID;
+    var API_KEY = process.env.API_KEY;
     var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
     var SCOPES = "https://www.googleapis.com/auth/spreadsheets.readonly";
     window.gapi.load('client', function(){
